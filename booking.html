@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Appointment | The Latin Barber</title>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -100,6 +102,45 @@
         .booking-header p {
             font-size: 1.1rem;
             color: var(--text-secondary);
+        }
+
+        /* Setup Instructions */
+        .setup-notice {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .setup-notice h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setup-notice ol {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .setup-notice li {
+            margin-bottom: 0.5rem;
+        }
+
+        .setup-notice code {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .setup-notice a {
+            color: #fff;
+            text-decoration: underline;
         }
 
         /* Progress Steps */
@@ -206,7 +247,8 @@
         }
 
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 0.875rem 1rem;
             border: 1.5px solid var(--border);
@@ -217,8 +259,14 @@
             background: var(--white);
         }
 
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(29, 29, 31, 0.05);
@@ -237,11 +285,13 @@
             cursor: pointer;
             transition: all 0.3s;
             background: var(--white);
+            position: relative;
         }
 
         .service-option:hover {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .service-option.selected {
@@ -250,24 +300,20 @@
         }
 
         .service-option input[type="radio"] {
-            display: none;
+            position: absolute;
+            opacity: 0;
         }
 
-        .service-info {
+        .service-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 0.5rem;
         }
 
         .service-name {
+            font-size: 1.2rem;
             font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .service-details {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
         }
 
         .service-price {
@@ -276,22 +322,38 @@
             color: var(--accent);
         }
 
+        .service-duration {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
         /* Time Slots */
+        .time-slots-container {
+            display: none;
+        }
+
         .time-slots {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 0.75rem;
+            margin-top: 1rem;
         }
 
         .time-slot {
-            padding: 1rem;
+            padding: 0.875rem;
             border: 1.5px solid var(--border);
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 500;
-            background: var(--white);
         }
 
         .time-slot:hover:not(.booked) {
@@ -337,6 +399,7 @@
             border-bottom: none;
             padding-top: 1rem;
             font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .summary-label {
@@ -357,12 +420,12 @@
         .btn {
             flex: 1;
             padding: 1rem 2rem;
+            border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
-            border: none;
             font-family: inherit;
         }
 
@@ -373,7 +436,7 @@
 
         .btn-primary:hover:not(:disabled) {
             transform: scale(1.02);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .btn-primary:disabled {
@@ -383,36 +446,83 @@
 
         .btn-secondary {
             background: transparent;
-            color: var(--text-secondary);
-            border: 1.5px solid var(--border);
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
         }
 
         .btn-secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
         }
 
         /* Confirmation */
         .confirmation {
             text-align: center;
-            padding: 3rem 0;
+            padding: 2rem 0;
         }
 
         .confirmation-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--success);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
         }
 
         .confirmation h2 {
             font-size: 2rem;
-            font-weight: 700;
             margin-bottom: 1rem;
         }
 
         .confirmation p {
             color: var(--text-secondary);
-            margin-bottom: 2rem;
             font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: var(--error);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
         }
 
         @media (max-width: 768px) {
@@ -424,12 +534,8 @@
                 padding: 2rem 1.5rem;
             }
 
-            .progress-steps {
-                flex-wrap: wrap;
-            }
-
             .time-slots {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             }
         }
     </style>
@@ -448,28 +554,42 @@
         </div>
     </nav>
 
-    <!-- Booking Container -->
     <div class="booking-container">
         <div class="booking-header">
             <h1>Book Your Appointment</h1>
-            <p>Select your service and preferred time</p>
+            <p>Schedule your next cut in just a few steps</p>
+        </div>
+
+        <!-- Setup Instructions -->
+        <div class="setup-notice">
+            <h3>🔧 Setup Required</h3>
+            <p><strong>To enable email notifications, follow these steps:</strong></p>
+            <ol>
+                <li>Go to <a href="https://www.emailjs.com" target="_blank">EmailJS.com</a> and create a free account</li>
+                <li>Add an email service (Gmail recommended)</li>
+                <li>Create an email template with variables: <code>{{service_name}}</code>, <code>{{date}}</code>, <code>{{time}}</code>, <code>{{customer_name}}</code>, <code>{{customer_phone}}</code>, <code>{{customer_email}}</code>, <code>{{price}}</code>, <code>{{notes}}</code></li>
+                <li>Copy your Public Key, Service ID, and Template ID</li>
+                <li>Replace the placeholders in the JavaScript below (line 830-832)</li>
+                <li>Set your admin email to: <strong>Benjamin.s.v.lopez@gmail.com</strong></li>
+            </ol>
+            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">Once set up, you'll receive an email notification for every booking!</p>
         </div>
 
         <!-- Progress Steps -->
         <div class="progress-steps">
-            <div class="progress-step active" data-step="1">
+            <div class="progress-step active">
                 <div class="step-circle">1</div>
                 <div class="step-label">Service</div>
             </div>
-            <div class="progress-step" data-step="2">
+            <div class="progress-step">
                 <div class="step-circle">2</div>
                 <div class="step-label">Date & Time</div>
             </div>
-            <div class="progress-step" data-step="3">
+            <div class="progress-step">
                 <div class="step-circle">3</div>
                 <div class="step-label">Details</div>
             </div>
-            <div class="progress-step" data-step="4">
+            <div class="progress-step">
                 <div class="step-circle">4</div>
                 <div class="step-label">Confirm</div>
             </div>
@@ -482,58 +602,45 @@
                 <h2 class="step-title">Choose Your Service</h2>
                 <p class="step-description">Select the service you'd like to book</p>
                 
-                <!-- Quick Test Booking Button -->
-                <div style="background: #FFF3CD; border: 2px solid #FFC107; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
-                    <p style="color: #856404; margin-bottom: 0.5rem; font-weight: 600;">🧪 Testing Mode</p>
-                    <button onclick="quickTestBooking()" style="background: #FFC107; color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
-                        Quick Test Booking (Skip All Steps)
-                    </button>
-                    <p style="color: #856404; font-size: 0.85rem; margin-top: 0.5rem;">Click to instantly test the booking confirmation</p>
-                </div>
-                
                 <div class="service-options">
                     <label class="service-option">
                         <input type="radio" name="service" value="classic-fade" data-price="20" data-duration="30">
-                        <div class="service-info">
-                            <div>
-                                <div class="service-name">Classic Fade</div>
-                                <div class="service-details">30 minutes</div>
-                            </div>
-                            <div class="service-price">£20</div>
+                        <div class="service-header">
+                            <span class="service-name">Classic Fade</span>
+                            <span class="service-price">£20</span>
                         </div>
+                        <div class="service-duration">30 minutes</div>
+                        <div class="service-description">A timeless fade with precision blending and clean lines.</div>
                     </label>
 
                     <label class="service-option">
                         <input type="radio" name="service" value="skin-fade" data-price="25" data-duration="45">
-                        <div class="service-info">
-                            <div>
-                                <div class="service-name">Skin Fade + Line Up</div>
-                                <div class="service-details">45 minutes</div>
-                            </div>
-                            <div class="service-price">£25</div>
+                        <div class="service-header">
+                            <span class="service-name">Skin Fade + Line Up</span>
+                            <span class="service-price">£25</span>
                         </div>
-                    </label>
-
-                    <label class="service-option">
-                        <input type="radio" name="service" value="beard-trim" data-price="15" data-duration="20">
-                        <div class="service-info">
-                            <div>
-                                <div class="service-name">Beard Trim & Shape</div>
-                                <div class="service-details">20 minutes</div>
-                            </div>
-                            <div class="service-price">£15</div>
-                        </div>
+                        <div class="service-duration">45 minutes</div>
+                        <div class="service-description">Complete transformation with zero fade and razor-sharp detailing.</div>
                     </label>
 
                     <label class="service-option">
                         <input type="radio" name="service" value="full-package" data-price="35" data-duration="60">
-                        <div class="service-info">
-                            <div>
-                                <div class="service-name">Full Package</div>
-                                <div class="service-details">60 minutes</div>
-                            </div>
-                            <div class="service-price">£35</div>
+                        <div class="service-header">
+                            <span class="service-name">Full Package</span>
+                            <span class="service-price">£35</span>
                         </div>
+                        <div class="service-duration">60 minutes</div>
+                        <div class="service-description">Fade, line up, and beard trim. The complete experience.</div>
+                    </label>
+
+                    <label class="service-option">
+                        <input type="radio" name="service" value="beard-trim" data-price="15" data-duration="20">
+                        <div class="service-header">
+                            <span class="service-name">Beard Trim & Shape</span>
+                            <span class="service-price">£15</span>
+                        </div>
+                        <div class="service-duration">20 minutes</div>
+                        <div class="service-description">Professional beard sculpting and maintenance.</div>
                     </label>
                 </div>
 
@@ -542,18 +649,18 @@
                 </div>
             </div>
 
-            <!-- Step 2: Date & Time -->
+            <!-- Step 2: Date & Time Selection -->
             <div class="form-step" data-step="2">
                 <h2 class="step-title">Select Date & Time</h2>
-                <p class="step-description">Choose your preferred appointment slot</p>
+                <p class="step-description">Choose when you'd like to come in</p>
                 
                 <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="bookingDate" min="">
+                    <label for="bookingDate">Date</label>
+                    <input type="date" id="bookingDate" required>
                 </div>
 
-                <div class="form-group" id="timeSlotsContainer" style="display: none;">
-                    <label>Available Times</label>
+                <div class="time-slots-container" id="timeSlotsContainer">
+                    <label>Available Time Slots</label>
                     <div class="time-slots" id="timeSlots"></div>
                 </div>
 
@@ -563,24 +670,29 @@
                 </div>
             </div>
 
-            <!-- Step 3: Your Details -->
+            <!-- Step 3: Customer Details -->
             <div class="form-step" data-step="3">
                 <h2 class="step-title">Your Details</h2>
                 <p class="step-description">We'll use this to confirm your appointment</p>
                 
                 <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="customerName" placeholder="John Smith">
+                    <label for="customerName">Full Name *</label>
+                    <input type="text" id="customerName" required placeholder="John Smith">
                 </div>
 
                 <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" id="customerPhone" placeholder="+44 1234 567890">
+                    <label for="customerPhone">Phone Number *</label>
+                    <input type="tel" id="customerPhone" required placeholder="+44 7xxx xxxxxx">
                 </div>
 
                 <div class="form-group">
-                    <label>Email (Optional)</label>
+                    <label for="customerEmail">Email (optional)</label>
                     <input type="email" id="customerEmail" placeholder="john@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="customerNotes">Special Requests (optional)</label>
+                    <textarea id="customerNotes" placeholder="Any specific requests or requirements?"></textarea>
                 </div>
 
                 <div class="form-actions">
@@ -598,16 +710,19 @@
 
                 <div class="form-actions">
                     <button class="btn btn-secondary" onclick="previousStep()">Back</button>
-                    <button class="btn btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+                    <button class="btn btn-primary" onclick="confirmBooking()" id="confirmBtn">Confirm Booking</button>
                 </div>
+
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                <div class="error-message" id="errorMessage"></div>
             </div>
 
             <!-- Success Message -->
             <div class="form-step" data-step="5">
                 <div class="confirmation">
                     <div class="confirmation-icon">✓</div>
-                    <h2>Booking Confirmed</h2>
-                    <p>Your appointment has been successfully booked. We'll send you a confirmation shortly.</p>
+                    <h2>Booking Confirmed!</h2>
+                    <p>Your appointment has been successfully booked. We'll be in touch shortly to confirm.</p>
                     <div class="booking-summary" id="finalSummary"></div>
                     <div class="form-actions">
                         <a href="index.html" class="btn btn-primary">Back to Home</a>
@@ -618,6 +733,16 @@
     </div>
 
     <script>
+        // ============================================
+        // EMAILJS CONFIGURATION - REPLACE THESE VALUES
+        // ============================================
+        const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY_HERE';  // Get from EmailJS dashboard
+        const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID_HERE';   // Your email service ID
+        const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID_HERE'; // Your template ID
+
+        // Initialize EmailJS
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+
         let currentStep = 1;
         let bookingData = {
             service: '',
@@ -628,10 +753,11 @@
             time: '',
             name: '',
             phone: '',
-            email: ''
+            email: '',
+            notes: ''
         };
 
-        // Simulated booked slots
+        // Simulated booked slots (in production, fetch from backend)
         let bookedSlots = {
             '2026-02-03': ['10:00', '14:00', '16:30'],
             '2026-02-04': ['11:00', '15:00'],
@@ -729,6 +855,7 @@
                 bookingData.name = name;
                 bookingData.phone = phone;
                 bookingData.email = document.getElementById('customerEmail').value.trim();
+                bookingData.notes = document.getElementById('customerNotes').value.trim();
                 
                 updateSummary();
             }
@@ -790,6 +917,12 @@
                     <span class="summary-label">Phone</span>
                     <span class="summary-value">${bookingData.phone}</span>
                 </div>
+                ${bookingData.email ? `
+                <div class="summary-item">
+                    <span class="summary-label">Email</span>
+                    <span class="summary-value">${bookingData.email}</span>
+                </div>
+                ` : ''}
                 <div class="summary-item">
                     <span class="summary-label">Total</span>
                     <span class="summary-value">£${bookingData.price}</span>
@@ -799,191 +932,64 @@
             document.getElementById('bookingSummary').innerHTML = summaryHTML;
         }
 
-        function confirmBooking() {
-            // Validate all data is present
-            if (!bookingData.service || !bookingData.date || !bookingData.time || !bookingData.name || !bookingData.phone) {
-                alert('Missing booking information. Please complete all steps.');
-                return;
+        async function confirmBooking() {
+            const confirmBtn = document.getElementById('confirmBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Show loading
+            confirmBtn.disabled = true;
+            loadingSpinner.classList.add('active');
+            errorMessage.classList.remove('active');
+
+            try {
+                // Send email notification via EmailJS
+                const templateParams = {
+                    service_name: bookingData.serviceName,
+                    date: formatDate(bookingData.date),
+                    time: bookingData.time,
+                    duration: bookingData.duration,
+                    customer_name: bookingData.name,
+                    customer_phone: bookingData.phone,
+                    customer_email: bookingData.email || 'Not provided',
+                    price: `£${bookingData.price}`,
+                    notes: bookingData.notes || 'No special requests',
+                    to_email: 'Benjamin.s.v.lopez@gmail.com'
+                };
+
+                const response = await emailjs.send(
+                    EMAILJS_SERVICE_ID,
+                    EMAILJS_TEMPLATE_ID,
+                    templateParams
+                );
+
+                console.log('Email sent successfully:', response);
+
+                // Add to booked slots
+                if (!bookedSlots[bookingData.date]) {
+                    bookedSlots[bookingData.date] = [];
+                }
+                bookedSlots[bookingData.date].push(bookingData.time);
+
+                // Show confirmation
+                document.getElementById('finalSummary').innerHTML = document.getElementById('bookingSummary').innerHTML;
+                
+                currentStep = 5;
+                updateStepDisplay();
+
+            } catch (error) {
+                console.error('Booking error:', error);
+                errorMessage.textContent = 'Sorry, there was an error processing your booking. Please try again or contact us directly.';
+                errorMessage.classList.add('active');
+                confirmBtn.disabled = false;
+            } finally {
+                loadingSpinner.classList.remove('active');
             }
-
-            // Add to booked slots to prevent double booking
-            if (!bookedSlots[bookingData.date]) {
-                bookedSlots[bookingData.date] = [];
-            }
-            bookedSlots[bookingData.date].push(bookingData.time);
-
-            // Format the confirmation message
-            const confirmationMessage = `
-━━━━━━━━━━━━━━━━━━━━━━
-✅ BOOKING CONFIRMED
-━━━━━━━━━━━━━━━━━━━━━━
-
-📋 Service: ${bookingData.serviceName}
-💰 Price: £${bookingData.price}
-📅 Date: ${formatDate(bookingData.date)}
-🕐 Time: ${bookingData.time}
-⏱ Duration: ${bookingData.duration} minutes
-
-👤 Customer Details:
-Name: ${bookingData.name}
-Phone: ${bookingData.phone}
-${bookingData.email ? 'Email: ' + bookingData.email : ''}
-
-━━━━━━━━━━━━━━━━━━━━━━
-📱 You will receive:
-• WhatsApp confirmation shortly
-• SMS reminder 24hrs before
-• Booking confirmation email
-
-Thank you for booking with The Latin Barber!
-━━━━━━━━━━━━━━━━━━━━━━
-            `.trim();
-
-            // Show alert confirmation
-            alert(confirmationMessage);
-
-            // Console log for testing/debugging
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log('📋 BOOKING CONFIRMED - DETAILS:');
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log('Service:', bookingData.serviceName);
-            console.log('Price: £' + bookingData.price);
-            console.log('Date:', bookingData.date);
-            console.log('Time:', bookingData.time);
-            console.log('Duration:', bookingData.duration, 'minutes');
-            console.log('Customer:', bookingData.name);
-            console.log('Phone:', bookingData.phone);
-            if (bookingData.email) console.log('Email:', bookingData.email);
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log('');
-            console.log('📤 NOTIFICATIONS TO SEND:');
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log('1. WhatsApp to Alex: New booking from ' + bookingData.name);
-            console.log('2. SMS to customer (' + bookingData.phone + '): Confirmation message');
-            if (bookingData.email) {
-                console.log('3. Email to customer (' + bookingData.email + '): Confirmation email');
-            }
-            console.log('4. Google Calendar: Add event for ' + bookingData.date + ' at ' + bookingData.time);
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log('');
-            console.log('💡 TO MAKE THIS LIVE:');
-            console.log('Connect to Twilio (SMS/WhatsApp), SendGrid (Email), or use Calendly');
-            console.log('See README.md for integration instructions');
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-
-            // Simulate sending notifications (in production, these would be actual API calls)
-            simulateNotifications();
-
-            // Show confirmation page
-            document.getElementById('finalSummary').innerHTML = document.getElementById('bookingSummary').innerHTML;
-            currentStep = 5;
-            updateStepDisplay();
-
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function simulateNotifications() {
-            // Simulate WhatsApp notification to Alex
-            console.log('📱 Sending WhatsApp to Alex...');
-            setTimeout(() => {
-                console.log('✅ WhatsApp sent to Alex');
-                console.log('Message: "New booking! ' + bookingData.name + ' - ' + bookingData.serviceName + ' on ' + formatDate(bookingData.date) + ' at ' + bookingData.time + '"');
-            }, 500);
-
-            // Simulate SMS to customer
-            console.log('📨 Sending SMS to ' + bookingData.phone + '...');
-            setTimeout(() => {
-                console.log('✅ SMS sent to customer');
-                console.log('Message: "Booking confirmed at The Latin Barber! ' + bookingData.serviceName + ' on ' + formatDate(bookingData.date) + ' at ' + bookingData.time + '. See you soon!"');
-            }, 1000);
-
-            // Simulate email if provided
-            if (bookingData.email) {
-                console.log('📧 Sending email to ' + bookingData.email + '...');
-                setTimeout(() => {
-                    console.log('✅ Email sent to customer');
-                    console.log('Subject: Booking Confirmation - The Latin Barber');
-                }, 1500);
-            }
-
-            // Simulate calendar entry
-            console.log('📅 Adding to Google Calendar...');
-            setTimeout(() => {
-                console.log('✅ Calendar event created');
-                console.log('Event: ' + bookingData.serviceName + ' with ' + bookingData.name);
-            }, 2000);
-
-            // Show success message in console
-            setTimeout(() => {
-                console.log('');
-                console.log('🎉 ALL NOTIFICATIONS SENT SUCCESSFULLY!');
-                console.log('Booking is now confirmed and in the system.');
-                console.log('');
-            }, 2500);
         }
 
         function formatDate(dateString) {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('en-GB', options);
-        }
-
-        function quickTestBooking() {
-            // Pre-fill with test data
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const dateString = tomorrow.toISOString().split('T')[0];
-            
-            bookingData = {
-                service: 'skin-fade',
-                serviceName: 'Skin Fade + Line Up',
-                price: 25,
-                duration: 45,
-                date: dateString,
-                time: '14:00',
-                name: 'John Smith',
-                phone: '+44 7700 900123',
-                email: 'john.smith@example.com'
-            };
-
-            // Show immediate confirmation
-            const testMessage = `
-━━━━━━━━━━━━━━━━━━━━━━
-🧪 TEST BOOKING CONFIRMED
-━━━━━━━━━━━━━━━━━━━━━━
-
-This is a TEST booking to demonstrate the system.
-
-📋 Service: ${bookingData.serviceName}
-💰 Price: £${bookingData.price}
-📅 Date: ${formatDate(bookingData.date)}
-🕐 Time: ${bookingData.time}
-⏱ Duration: ${bookingData.duration} minutes
-
-👤 Test Customer:
-Name: ${bookingData.name}
-Phone: ${bookingData.phone}
-Email: ${bookingData.email}
-
-━━━━━━━━━━━━━━━━━━━━━━
-✅ BOOKING SYSTEM WORKS!
-
-In production, this would:
-• Send WhatsApp to Alex
-• Send SMS to customer
-• Send confirmation email
-• Add to Google Calendar
-• Block this time slot
-
-Check the browser console (F12) 
-for detailed notification logs.
-━━━━━━━━━━━━━━━━━━━━━━
-            `.trim();
-
-            alert(testMessage);
-            
-            // Simulate the full booking process
-            confirmBooking();
         }
     </script>
 </body>
