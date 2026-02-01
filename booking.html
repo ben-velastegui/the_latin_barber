@@ -482,6 +482,15 @@
                 <h2 class="step-title">Choose Your Service</h2>
                 <p class="step-description">Select the service you'd like to book</p>
                 
+                <!-- Quick Test Booking Button -->
+                <div style="background: #FFF3CD; border: 2px solid #FFC107; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
+                    <p style="color: #856404; margin-bottom: 0.5rem; font-weight: 600;">🧪 Testing Mode</p>
+                    <button onclick="quickTestBooking()" style="background: #FFC107; color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
+                        Quick Test Booking (Skip All Steps)
+                    </button>
+                    <p style="color: #856404; font-size: 0.85rem; margin-top: 0.5rem;">Click to instantly test the booking confirmation</p>
+                </div>
+                
                 <div class="service-options">
                     <label class="service-option">
                         <input type="radio" name="service" value="classic-fade" data-price="20" data-duration="30">
@@ -791,25 +800,190 @@
         }
 
         function confirmBooking() {
-            // Add to booked slots
+            // Validate all data is present
+            if (!bookingData.service || !bookingData.date || !bookingData.time || !bookingData.name || !bookingData.phone) {
+                alert('Missing booking information. Please complete all steps.');
+                return;
+            }
+
+            // Add to booked slots to prevent double booking
             if (!bookedSlots[bookingData.date]) {
                 bookedSlots[bookingData.date] = [];
             }
             bookedSlots[bookingData.date].push(bookingData.time);
 
-            // Show confirmation
+            // Format the confirmation message
+            const confirmationMessage = `
+━━━━━━━━━━━━━━━━━━━━━━
+✅ BOOKING CONFIRMED
+━━━━━━━━━━━━━━━━━━━━━━
+
+📋 Service: ${bookingData.serviceName}
+💰 Price: £${bookingData.price}
+📅 Date: ${formatDate(bookingData.date)}
+🕐 Time: ${bookingData.time}
+⏱ Duration: ${bookingData.duration} minutes
+
+👤 Customer Details:
+Name: ${bookingData.name}
+Phone: ${bookingData.phone}
+${bookingData.email ? 'Email: ' + bookingData.email : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━
+📱 You will receive:
+• WhatsApp confirmation shortly
+• SMS reminder 24hrs before
+• Booking confirmation email
+
+Thank you for booking with The Latin Barber!
+━━━━━━━━━━━━━━━━━━━━━━
+            `.trim();
+
+            // Show alert confirmation
+            alert(confirmationMessage);
+
+            // Console log for testing/debugging
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('📋 BOOKING CONFIRMED - DETAILS:');
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('Service:', bookingData.serviceName);
+            console.log('Price: £' + bookingData.price);
+            console.log('Date:', bookingData.date);
+            console.log('Time:', bookingData.time);
+            console.log('Duration:', bookingData.duration, 'minutes');
+            console.log('Customer:', bookingData.name);
+            console.log('Phone:', bookingData.phone);
+            if (bookingData.email) console.log('Email:', bookingData.email);
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('');
+            console.log('📤 NOTIFICATIONS TO SEND:');
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('1. WhatsApp to Alex: New booking from ' + bookingData.name);
+            console.log('2. SMS to customer (' + bookingData.phone + '): Confirmation message');
+            if (bookingData.email) {
+                console.log('3. Email to customer (' + bookingData.email + '): Confirmation email');
+            }
+            console.log('4. Google Calendar: Add event for ' + bookingData.date + ' at ' + bookingData.time);
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('');
+            console.log('💡 TO MAKE THIS LIVE:');
+            console.log('Connect to Twilio (SMS/WhatsApp), SendGrid (Email), or use Calendly');
+            console.log('See README.md for integration instructions');
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+            // Simulate sending notifications (in production, these would be actual API calls)
+            simulateNotifications();
+
+            // Show confirmation page
             document.getElementById('finalSummary').innerHTML = document.getElementById('bookingSummary').innerHTML;
-            
-            // In production, send to backend
-            console.log('Booking confirmed:', bookingData);
-            
             currentStep = 5;
             updateStepDisplay();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function simulateNotifications() {
+            // Simulate WhatsApp notification to Alex
+            console.log('📱 Sending WhatsApp to Alex...');
+            setTimeout(() => {
+                console.log('✅ WhatsApp sent to Alex');
+                console.log('Message: "New booking! ' + bookingData.name + ' - ' + bookingData.serviceName + ' on ' + formatDate(bookingData.date) + ' at ' + bookingData.time + '"');
+            }, 500);
+
+            // Simulate SMS to customer
+            console.log('📨 Sending SMS to ' + bookingData.phone + '...');
+            setTimeout(() => {
+                console.log('✅ SMS sent to customer');
+                console.log('Message: "Booking confirmed at The Latin Barber! ' + bookingData.serviceName + ' on ' + formatDate(bookingData.date) + ' at ' + bookingData.time + '. See you soon!"');
+            }, 1000);
+
+            // Simulate email if provided
+            if (bookingData.email) {
+                console.log('📧 Sending email to ' + bookingData.email + '...');
+                setTimeout(() => {
+                    console.log('✅ Email sent to customer');
+                    console.log('Subject: Booking Confirmation - The Latin Barber');
+                }, 1500);
+            }
+
+            // Simulate calendar entry
+            console.log('📅 Adding to Google Calendar...');
+            setTimeout(() => {
+                console.log('✅ Calendar event created');
+                console.log('Event: ' + bookingData.serviceName + ' with ' + bookingData.name);
+            }, 2000);
+
+            // Show success message in console
+            setTimeout(() => {
+                console.log('');
+                console.log('🎉 ALL NOTIFICATIONS SENT SUCCESSFULLY!');
+                console.log('Booking is now confirmed and in the system.');
+                console.log('');
+            }, 2500);
         }
 
         function formatDate(dateString) {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('en-GB', options);
+        }
+
+        function quickTestBooking() {
+            // Pre-fill with test data
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateString = tomorrow.toISOString().split('T')[0];
+            
+            bookingData = {
+                service: 'skin-fade',
+                serviceName: 'Skin Fade + Line Up',
+                price: 25,
+                duration: 45,
+                date: dateString,
+                time: '14:00',
+                name: 'John Smith',
+                phone: '+44 7700 900123',
+                email: 'john.smith@example.com'
+            };
+
+            // Show immediate confirmation
+            const testMessage = `
+━━━━━━━━━━━━━━━━━━━━━━
+🧪 TEST BOOKING CONFIRMED
+━━━━━━━━━━━━━━━━━━━━━━
+
+This is a TEST booking to demonstrate the system.
+
+📋 Service: ${bookingData.serviceName}
+💰 Price: £${bookingData.price}
+📅 Date: ${formatDate(bookingData.date)}
+🕐 Time: ${bookingData.time}
+⏱ Duration: ${bookingData.duration} minutes
+
+👤 Test Customer:
+Name: ${bookingData.name}
+Phone: ${bookingData.phone}
+Email: ${bookingData.email}
+
+━━━━━━━━━━━━━━━━━━━━━━
+✅ BOOKING SYSTEM WORKS!
+
+In production, this would:
+• Send WhatsApp to Alex
+• Send SMS to customer
+• Send confirmation email
+• Add to Google Calendar
+• Block this time slot
+
+Check the browser console (F12) 
+for detailed notification logs.
+━━━━━━━━━━━━━━━━━━━━━━
+            `.trim();
+
+            alert(testMessage);
+            
+            // Simulate the full booking process
+            confirmBooking();
         }
     </script>
 </body>

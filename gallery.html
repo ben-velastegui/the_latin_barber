@@ -249,46 +249,78 @@
         <p>Every cut tells a story</p>
     </section>
 
-    <!-- Gallery Section -->
+    <!-- Instagram Gallery Section -->
     <section class="gallery-section">
-        <div class="gallery-grid">
-            <div class="gallery-item">
-                <div class="gallery-placeholder">✂️</div>
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <!-- Instagram Embed Widget -->
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1rem;">Our Latest Work</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Follow us on Instagram for more</p>
             </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">💈</div>
+
+            <!-- Elfsight Instagram Feed Widget -->
+            <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+            <div class="elfsight-app-8c9bb3be-c2e8-480b-a7b5-9e4ee1e0c8e6" data-elfsight-app-lazy></div>
+
+            <!-- Alternative: Curator.io Widget (uncomment if preferred) -->
+            <!-- 
+            <div id="curator-feed-default-feed-layout">
+                <a href="https://curator.io" target="_blank" class="crt-logo crt-tag">Powered by Curator.io</a>
             </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">⭐</div>
+            <script type="text/javascript">
+            (function(){
+                var i, e, d = document, s = "script";i = d.createElement("script");i.async = 1;
+                i.src = "https://cdn.curator.io/published/YOUR-WIDGET-ID.js";
+                e = d.getElementsByTagName(s)[0];e.parentNode.insertBefore(i, e);
+            })();
+            </script>
+            -->
+
+            <!-- Fallback: Manual Instagram Grid -->
+            <div class="gallery-grid" id="manualGallery">
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">✂️</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">💈</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">⭐</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">✨</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">🔥</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">💯</div>
+                </div>
             </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">✨</div>
-            </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">🔥</div>
-            </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">💯</div>
-            </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">👨</div>
-            </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">✂️</div>
-            </div>
-            <div class="gallery-item">
-                <div class="gallery-placeholder">💈</div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://instagram.com/thelatinbarber_" target="_blank" class="instagram-button">
+                    View Full Gallery on Instagram
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Instagram Section -->
+    <!-- Setup Instructions -->
     <section class="instagram-section">
-        <h2>Follow Our Journey</h2>
-        <p>See more of our work on Instagram</p>
-        <a href="https://instagram.com/thelatinbarber_" target="_blank" class="instagram-button">
-            @thelatinbarber_
-        </a>
+        <h2>Instagram Feed Setup</h2>
+        <div style="max-width: 800px; margin: 0 auto; text-align: left; background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--border);">
+            <p style="margin-bottom: 1rem;"><strong>To display your live Instagram feed:</strong></p>
+            <ol style="color: var(--text-secondary); line-height: 2;">
+                <li><strong>Option 1 - Elfsight (Easiest):</strong> Go to <a href="https://elfsight.com/instagram-feed-insta/" target="_blank">elfsight.com/instagram-feed</a>, create a free widget, and replace the widget ID in the code above.</li>
+                <li><strong>Option 2 - Curator.io:</strong> Sign up at <a href="https://curator.io" target="_blank">curator.io</a>, create an Instagram feed, and uncomment the Curator.io code section.</li>
+                <li><strong>Option 3 - EmbedSocial:</strong> Visit <a href="https://embedsocial.com" target="_blank">embedsocial.com</a> for another Instagram feed solution.</li>
+                <li><strong>Option 4 - Snapwidget:</strong> Use <a href="https://snapwidget.com" target="_blank">snapwidget.com</a> to create a customizable Instagram widget.</li>
+            </ol>
+            <p style="margin-top: 1.5rem; color: var(--text-secondary);">
+                <strong>Quick Start:</strong> Elfsight offers a free plan with 200 views/month. Just sign up, connect your Instagram account, customize the layout, and copy the embed code.
+            </p>
+        </div>
     </section>
 
     <!-- Footer -->
