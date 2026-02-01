@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | The Latin Barber</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1d1d1f;
+            --secondary: #f5f5f7;
+            --accent: #C9A961;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --border: #d2d2d7;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: var(--white);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .book-btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 120px 5% 80px;
+            background: var(--secondary);
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 1rem;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .service-item:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .service-item h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .service-meta {
+            text-align: right;
+        }
+
+        .service-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .service-duration {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-includes {
+            margin-top: 1.5rem;
+        }
+
+        .service-includes h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .service-includes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .service-includes li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .service-includes li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .book-service-btn {
+            margin-top: 1.5rem;
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .book-service-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Add-ons Section */
+        .addons-section {
+            background: var(--secondary);
+            padding: 80px 5%;
+            margin-top: 4rem;
+        }
+
+        .addons-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .addons-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .addon-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .addon-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .addon-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .addon-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        footer .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        footer h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        footer p, footer a {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        footer a:hover {
+            color: var(--text-primary);
+        }
+
+        .copyright {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .service-header {
+                flex-direction: column;
+            }
+
+            .service-meta {
+                text-align: left;
+            }
+
+            .service-item {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">The Latin Barber</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="booking.html" class="book-btn">Book Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>Our Services</h1>
+        <p>Professional cuts and grooming tailored to you</p>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="service-item">
+            <div class="service-header">
+                <div>
+                    <h2>Classic Fade</h2>
+                </div>
+                <div class="service-meta">
+                    <div class="service-price">£20</div>
+                    <div class="service-duration">30 minutes</div>
+                </div>
+            </div>
+            <p class="service-description">
+                A timeless fade that never goes out of style. Precision blending with clean, sharp lines that complement your natural features.
+            </p>
+            <div class="service-includes">
+                <h3>What's Included:</h3>
+                <ul>
+                    <li>Consultation and style assessment</li>
+                    <li>Professional fade technique</li>
+                    <li>Precision clipper work</li>
+                    <li>Styling and finish</li>
+                </ul>
+            </div>
+            <a href="booking.html?service=classic-fade" class="book-service-btn">Book This Service</a>
+        </div>
+
+        <div class="service-item">
+            <div class="service-header">
+                <div>
+                    <h2>Skin Fade + Line Up</h2>
+                </div>
+                <div class="service-meta">
+                    <div class="service-price">£25</div>
+                    <div class="service-duration">45 minutes</div>
+                </div>
+            </div>
+            <p class="service-description">
+                The complete transformation. Zero fade blended to perfection with razor-sharp line work for maximum definition and style.
+            </p>
+            <div class="service-includes">
+                <h3>What's Included:</h3>
+                <ul>
+                    <li>Detailed consultation</li>
+                    <li>Skin fade technique</li>
+                    <li>Razor line up and edge work</li>
+                    <li>Precision detailing</li>
+                    <li>Styling and finish</li>
+                </ul>
+            </div>
+            <a href="booking.html?service=skin-fade" class="book-service-btn">Book This Service</a>
+        </div>
+
+        <div class="service-item">
+            <div class="service-header">
+                <div>
+                    <h2>Beard Trim & Shape</h2>
+                </div>
+                <div class="service-meta">
+                    <div class="service-price">£15</div>
+                    <div class="service-duration">20 minutes</div>
+                </div>
+            </div>
+            <p class="service-description">
+                Professional beard sculpting with precise line work and perfect symmetry. Enhance your facial features with expert shaping.
+            </p>
+            <div class="service-includes">
+                <h3>What's Included:</h3>
+                <ul>
+                    <li>Beard consultation</li>
+                    <li>Professional trimming and shaping</li>
+                    <li>Neck line and cheek line definition</li>
+                    <li>Conditioning treatment</li>
+                </ul>
+            </div>
+            <a href="booking.html?service=beard-trim" class="book-service-btn">Book This Service</a>
+        </div>
+
+        <div class="service-item">
+            <div class="service-header">
+                <div>
+                    <h2>Full Package</h2>
+                </div>
+                <div class="service-meta">
+                    <div class="service-price">£35</div>
+                    <div class="service-duration">60 minutes</div>
+                </div>
+            </div>
+            <p class="service-description">
+                The complete grooming experience. Fade, line up, and beard trim all in one session. Leave looking polished and refined.
+            </p>
+            <div class="service-includes">
+                <h3>What's Included:</h3>
+                <ul>
+                    <li>Full consultation</li>
+                    <li>Professional fade or skin fade</li>
+                    <li>Razor line up and detailing</li>
+                    <li>Beard trim and shaping</li>
+                    <li>Neck line grooming</li>
+                    <li>Premium styling products</li>
+                </ul>
+            </div>
+            <a href="booking.html?service=full-package" class="book-service-btn">Book This Service</a>
+        </div>
+    </section>
+
+    <!-- Add-ons Section -->
+    <section class="addons-section">
+        <h2>Enhance Your Experience</h2>
+        <div class="addons-grid">
+            <div class="addon-card">
+                <h3>Hot Towel Treatment</h3>
+                <div class="addon-price">£10</div>
+                <p>Traditional hot towel service with premium products. Perfect addition to any cut or beard service.</p>
+            </div>
+            <div class="addon-card">
+                <h3>Razor Finish</h3>
+                <div class="addon-price">£8</div>
+                <p>Precision razor work for ultra-clean lines and edges. Takes your cut to the next level.</p>
+            </div>
+            <div class="addon-card">
+                <h3>Scalp Treatment</h3>
+                <div class="addon-price">£12</div>
+                <p>Relaxing scalp massage with nourishing treatment. Refreshing and rejuvenating.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div>
+                <h4>Location</h4>
+                <p>Newcastle Upon Tyne</p>
+                <p>Gateshead</p>
+            </div>
+            <div>
+                <h4>Hours</h4>
+                <p>Mon-Fri: 9:00 AM - 7:00 PM</p>
+                <p>Sat: 9:00 AM - 6:00 PM</p>
+                <p>Sun: 10:00 AM - 4:00 PM</p>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+441234567890">+44 1234 567890</a>
+                <a href="mailto:info@thelatinbarber.com">info@thelatinbarber.com</a>
+                <a href="https://instagram.com/thelatinbarber_" target="_blank">@thelatinbarber_</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 The Latin Barber. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

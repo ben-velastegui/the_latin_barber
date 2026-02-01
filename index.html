@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Latin Barber | Premium Barbering in Newcastle & Gateshead</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1d1d1f;
+            --secondary: #f5f5f7;
+            --accent: #C9A961;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --border: #d2d2d7;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: var(--white);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .book-btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .book-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 5% 80px;
+            background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            letter-spacing: -0.3px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            letter-spacing: -0.2px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* Services Preview */
+        .services-preview {
+            padding: 120px 5%;
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--secondary);
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .service-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .service-duration {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Gallery Preview */
+        .gallery-preview {
+            padding: 120px 5%;
+            background: var(--secondary);
+        }
+
+        .gallery-grid {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 4rem;
+            color: var(--text-secondary);
+            opacity: 0.3;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 5%;
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 2rem;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        footer .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        footer h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        footer p, footer a {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        footer a:hover {
+            color: var(--text-primary);
+        }
+
+        .copyright {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .services-grid,
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 80px 5% 60px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content > * {
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .hero-content h1 {
+            animation-delay: 0.1s;
+        }
+
+        .hero-content p {
+            animation-delay: 0.2s;
+        }
+
+        .hero-content .cta-buttons {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">The Latin Barber</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="booking.html" class="book-btn">Book Now</a></li>
+            </ul>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Premium Barbering, Refined.</h1>
+            <p>Expert cuts and grooming in Newcastle & Gateshead. Where precision meets style.</p>
+            <div class="cta-buttons">
+                <a href="booking.html" class="btn btn-primary">Book Appointment</a>
+                <a href="services.html" class="btn btn-secondary">View Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Preview -->
+    <section class="services-preview">
+        <div class="section-header">
+            <h2>Our Services</h2>
+            <p>Professional cuts tailored to you</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Classic Fade</h3>
+                <div class="service-price">£20</div>
+                <div class="service-duration">30 minutes</div>
+                <p>A timeless fade with precision blending and clean lines.</p>
+            </div>
+            <div class="service-card">
+                <h3>Skin Fade + Line Up</h3>
+                <div class="service-price">£25</div>
+                <div class="service-duration">45 minutes</div>
+                <p>Complete transformation with zero fade and razor-sharp detailing.</p>
+            </div>
+            <div class="service-card">
+                <h3>Full Package</h3>
+                <div class="service-price">£35</div>
+                <div class="service-duration">60 minutes</div>
+                <p>Fade, line up, and beard trim. The complete experience.</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="services.html" class="btn btn-secondary">View All Services</a>
+        </div>
+    </section>
+
+    <!-- Gallery Preview -->
+    <section class="gallery-preview">
+        <div class="section-header">
+            <h2>Our Work</h2>
+            <p>Quality speaks for itself</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="gallery-placeholder">✂️</div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">💈</div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">⭐</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="gallery.html" class="btn btn-secondary">View Gallery</a>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready for your next cut?</h2>
+        <p>Book your appointment today</p>
+        <a href="booking.html" class="btn btn-primary">Book Now</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div>
+                <h4>Location</h4>
+                <p>Newcastle Upon Tyne</p>
+                <p>Gateshead</p>
+            </div>
+            <div>
+                <h4>Hours</h4>
+                <p>Mon-Fri: 9:00 AM - 7:00 PM</p>
+                <p>Sat: 9:00 AM - 6:00 PM</p>
+                <p>Sun: 10:00 AM - 4:00 PM</p>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+441234567890">+44 1234 567890</a>
+                <a href="mailto:info@thelatinbarber.com">info@thelatinbarber.com</a>
+                <a href="https://instagram.com/thelatinbarber_" target="_blank">@thelatinbarber_</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 The Latin Barber. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

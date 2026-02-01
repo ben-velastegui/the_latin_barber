@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | The Latin Barber</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1d1d1f;
+            --secondary: #f5f5f7;
+            --accent: #C9A961;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --border: #d2d2d7;
+            --white: #ffffff;
+            --success: #34c759;
+            --error: #ff3b30;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: var(--secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        /* Booking Container */
+        .booking-container {
+            max-width: 800px;
+            margin: 100px auto 60px;
+            padding: 0 5%;
+        }
+
+        .booking-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .booking-header h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .step-circle {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .progress-step.completed .step-circle {
+            background: var(--accent);
+            color: var(--white);
+            border-color: var(--accent);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Booking Form */
+        .booking-form {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(29, 29, 31, 0.05);
+        }
+
+        /* Service Selection */
+        .service-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .service-option {
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+
+        .service-option:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .service-option.selected {
+            border-color: var(--primary);
+            background: rgba(29, 29, 31, 0.02);
+        }
+
+        .service-option input[type="radio"] {
+            display: none;
+        }
+
+        .service-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .service-details {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .service-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Time Slots */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .time-slot {
+            padding: 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            background: var(--white);
+        }
+
+        .time-slot:hover:not(.booked) {
+            border-color: var(--primary);
+            background: rgba(29, 29, 31, 0.02);
+        }
+
+        .time-slot.selected {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .time-slot.booked {
+            background: var(--secondary);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Summary */
+        .booking-summary {
+            background: var(--secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            padding-top: 1rem;
+            font-weight: 600;
+        }
+
+        .summary-label {
+            color: var(--text-secondary);
+        }
+
+        .summary-value {
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Confirmation */
+        .confirmation {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .confirmation-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .confirmation h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .confirmation p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .booking-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .progress-steps {
+                flex-wrap: wrap;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">The Latin Barber</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Booking Container -->
+    <div class="booking-container">
+        <div class="booking-header">
+            <h1>Book Your Appointment</h1>
+            <p>Select your service and preferred time</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="progress-step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Service</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Date & Time</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Details</div>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Confirm</div>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="booking-form">
+            <!-- Step 1: Service Selection -->
+            <div class="form-step active" data-step="1">
+                <h2 class="step-title">Choose Your Service</h2>
+                <p class="step-description">Select the service you'd like to book</p>
+                
+                <div class="service-options">
+                    <label class="service-option">
+                        <input type="radio" name="service" value="classic-fade" data-price="20" data-duration="30">
+                        <div class="service-info">
+                            <div>
+                                <div class="service-name">Classic Fade</div>
+                                <div class="service-details">30 minutes</div>
+                            </div>
+                            <div class="service-price">£20</div>
+                        </div>
+                    </label>
+
+                    <label class="service-option">
+                        <input type="radio" name="service" value="skin-fade" data-price="25" data-duration="45">
+                        <div class="service-info">
+                            <div>
+                                <div class="service-name">Skin Fade + Line Up</div>
+                                <div class="service-details">45 minutes</div>
+                            </div>
+                            <div class="service-price">£25</div>
+                        </div>
+                    </label>
+
+                    <label class="service-option">
+                        <input type="radio" name="service" value="beard-trim" data-price="15" data-duration="20">
+                        <div class="service-info">
+                            <div>
+                                <div class="service-name">Beard Trim & Shape</div>
+                                <div class="service-details">20 minutes</div>
+                            </div>
+                            <div class="service-price">£15</div>
+                        </div>
+                    </label>
+
+                    <label class="service-option">
+                        <input type="radio" name="service" value="full-package" data-price="35" data-duration="60">
+                        <div class="service-info">
+                            <div>
+                                <div class="service-name">Full Package</div>
+                                <div class="service-details">60 minutes</div>
+                            </div>
+                            <div class="service-price">£35</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="nextStep()" id="step1Next" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Date & Time -->
+            <div class="form-step" data-step="2">
+                <h2 class="step-title">Select Date & Time</h2>
+                <p class="step-description">Choose your preferred appointment slot</p>
+                
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="bookingDate" min="">
+                </div>
+
+                <div class="form-group" id="timeSlotsContainer" style="display: none;">
+                    <label>Available Times</label>
+                    <div class="time-slots" id="timeSlots"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+                    <button class="btn btn-primary" onclick="nextStep()" id="step2Next" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Your Details -->
+            <div class="form-step" data-step="3">
+                <h2 class="step-title">Your Details</h2>
+                <p class="step-description">We'll use this to confirm your appointment</p>
+                
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="customerName" placeholder="John Smith">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="customerPhone" placeholder="+44 1234 567890">
+                </div>
+
+                <div class="form-group">
+                    <label>Email (Optional)</label>
+                    <input type="email" id="customerEmail" placeholder="john@example.com">
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+                    <button class="btn btn-primary" onclick="nextStep()" id="step3Next">Review Booking</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Confirmation -->
+            <div class="form-step" data-step="4">
+                <h2 class="step-title">Confirm Your Booking</h2>
+                <p class="step-description">Please review your appointment details</p>
+                
+                <div class="booking-summary" id="bookingSummary"></div>
+
+                <div class="form-actions">
+                    <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+                    <button class="btn btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="form-step" data-step="5">
+                <div class="confirmation">
+                    <div class="confirmation-icon">✓</div>
+                    <h2>Booking Confirmed</h2>
+                    <p>Your appointment has been successfully booked. We'll send you a confirmation shortly.</p>
+                    <div class="booking-summary" id="finalSummary"></div>
+                    <div class="form-actions">
+                        <a href="index.html" class="btn btn-primary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let bookingData = {
+            service: '',
+            serviceName: '',
+            price: 0,
+            duration: 0,
+            date: '',
+            time: '',
+            name: '',
+            phone: '',
+            email: ''
+        };
+
+        // Simulated booked slots
+        let bookedSlots = {
+            '2026-02-03': ['10:00', '14:00', '16:30'],
+            '2026-02-04': ['11:00', '15:00'],
+            '2026-02-05': ['09:00', '13:00', '17:00']
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+
+            // Service selection
+            document.querySelectorAll('.service-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const input = this.querySelector('input[type="radio"]');
+                    input.checked = true;
+                    
+                    bookingData.service = input.value;
+                    bookingData.serviceName = this.querySelector('.service-name').textContent;
+                    bookingData.price = parseInt(input.dataset.price);
+                    bookingData.duration = parseInt(input.dataset.duration);
+                    
+                    document.getElementById('step1Next').disabled = false;
+                });
+            });
+
+            // Date selection
+            document.getElementById('bookingDate').addEventListener('change', function() {
+                bookingData.date = this.value;
+                generateTimeSlots();
+            });
+
+            // Check for pre-selected service from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const preSelectedService = urlParams.get('service');
+            if (preSelectedService) {
+                const serviceInput = document.querySelector(`input[value="${preSelectedService}"]`);
+                if (serviceInput) {
+                    serviceInput.closest('.service-option').click();
+                }
+            }
+        });
+
+        function generateTimeSlots() {
+            const container = document.getElementById('timeSlotsContainer');
+            const slotsDiv = document.getElementById('timeSlots');
+            slotsDiv.innerHTML = '';
+            container.style.display = 'block';
+
+            const booked = bookedSlots[bookingData.date] || [];
+            const slots = [];
+
+            // Generate slots from 9 AM to 7 PM
+            for (let hour = 9; hour < 19; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    slots.push(time);
+                }
+            }
+
+            slots.forEach(time => {
+                const slot = document.createElement('div');
+                slot.className = 'time-slot';
+                slot.textContent = time;
+
+                if (booked.includes(time)) {
+                    slot.classList.add('booked');
+                } else {
+                    slot.addEventListener('click', function() {
+                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                        this.classList.add('selected');
+                        bookingData.time = time;
+                        document.getElementById('step2Next').disabled = false;
+                    });
+                }
+
+                slotsDiv.appendChild(slot);
+            });
+        }
+
+        function nextStep() {
+            // Validation
+            if (currentStep === 3) {
+                const name = document.getElementById('customerName').value.trim();
+                const phone = document.getElementById('customerPhone').value.trim();
+                
+                if (!name || !phone) {
+                    alert('Please fill in your name and phone number');
+                    return;
+                }
+                
+                bookingData.name = name;
+                bookingData.phone = phone;
+                bookingData.email = document.getElementById('customerEmail').value.trim();
+                
+                updateSummary();
+            }
+
+            currentStep++;
+            updateStepDisplay();
+        }
+
+        function previousStep() {
+            currentStep--;
+            updateStepDisplay();
+        }
+
+        function updateStepDisplay() {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+
+            // Show current step
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+
+            // Update progress
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                const stepNum = index + 1;
+                if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                } else if (stepNum === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        function updateSummary() {
+            const summaryHTML = `
+                <div class="summary-title">Booking Summary</div>
+                <div class="summary-item">
+                    <span class="summary-label">Service</span>
+                    <span class="summary-value">${bookingData.serviceName}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Date</span>
+                    <span class="summary-value">${formatDate(bookingData.date)}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Time</span>
+                    <span class="summary-value">${bookingData.time}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Duration</span>
+                    <span class="summary-value">${bookingData.duration} minutes</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Name</span>
+                    <span class="summary-value">${bookingData.name}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Phone</span>
+                    <span class="summary-value">${bookingData.phone}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value">£${bookingData.price}</span>
+                </div>
+            `;
+
+            document.getElementById('bookingSummary').innerHTML = summaryHTML;
+        }
+
+        function confirmBooking() {
+            // Add to booked slots
+            if (!bookedSlots[bookingData.date]) {
+                bookedSlots[bookingData.date] = [];
+            }
+            bookedSlots[bookingData.date].push(bookingData.time);
+
+            // Show confirmation
+            document.getElementById('finalSummary').innerHTML = document.getElementById('bookingSummary').innerHTML;
+            
+            // In production, send to backend
+            console.log('Booking confirmed:', bookingData);
+            
+            currentStep = 5;
+            updateStepDisplay();
+        }
+
+        function formatDate(dateString) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-GB', options);
+        }
+    </script>
+</body>
+</html>
